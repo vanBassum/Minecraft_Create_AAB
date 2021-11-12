@@ -8,15 +8,17 @@ RUN apt-get install -y wget unzip && \
 
 VOLUME /data
 
-COPY install.sh /data
-COPY start.sh /data
+COPY install.sh .
+COPY start.sh .
 
 RUN mkdir /tmp/server && cd /tmp/server
 RUN wget -c https://media.forgecdn.net/files/3514/613/Above+and+Beyond-1.1-Server.zip -O server.zip
-RUN unzip server.zip -d /data
+RUN unzip server.zip -d /tmp/server
+RUN cp -R /tmp/server/Above*/* /data
+RUN rm -rf /tmp/server
 RUN chmod -R 777 /data
 RUN chown -R minecraft /data
-RUN cd /data && bash -x install.sh
+RUN bash -x install.sh
 RUN chmod -R 777 /data
 RUN chown -R minecraft /data
 
