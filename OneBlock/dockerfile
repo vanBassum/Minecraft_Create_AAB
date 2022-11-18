@@ -1,0 +1,20 @@
+FROM alpine:3.16.0
+FROM openjdk:8-jre-alpine
+
+VOLUME /etc/minecraft
+COPY files/eula.txt /etc/minecraft/eula.txt
+
+RUN mkdir -pv /etc/minecraft
+RUN adduser -DHs /sbin/nologin minecraft
+RUN wget -c https://mediafilez.forgecdn.net/files/3778/729/AllinOneServer-1.5.1.zip -O server.zip
+RUN unzip server.zip -d /etc/minecraft
+RUN rm server.zip
+RUN chmod -R 777 /etc/minecraft
+RUN chown -R minecraft /etc/minecraft
+
+USER minecraft
+WORKDIR /etc/minecraft
+EXPOSE 25565
+ENV _JAVA_OPTIONS '-Xmx4G -Xms1024M'
+CMD ["java", "-jar", "forge-1.16.5-36.2.34.jar", "nogui"]
+
